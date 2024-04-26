@@ -6,15 +6,18 @@
       <option name="ignoredModules">
         <list>
           <option value="Hibirnate" />
+          <option value="Hibirnate" />
         </list>
       </option>
       <option name="ignoredPackages">
         <list>
           <option value="org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1" />
+          <option value="com.google.guava:guava:10.0.1" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
         </list>
       </option>

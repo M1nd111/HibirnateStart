@@ -1,7 +1,10 @@
-/*
 package hibernate.starter;
 
-import hibernate.starter.entity.User;
+import hibernate.starter.entity.*;
+import hibernate.starter.util.HibernateUtil;
+import lombok.Cleanup;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
@@ -18,9 +21,118 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateRunnerTest {
+
+    @Test
+    public void checkOneToOneAutoId(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+        Company company = session.get(Company.class, 1);
+
+        User user = User.builder()
+                .username("Ban@1mail.ru")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Dan8888")
+                        .lastname("Web")
+                        .birthDate(new Birthday(LocalDate.of(1999, 10, 11))).build())
+                .company(company)
+                .role(Role.ADMIN)
+                .build();
+        ProfileAutoId profile = ProfileAutoId.builder()
+                .language("RU")
+                .street("ofmsc")
+                .build();
+        session.save(user);
+        profile.setUser(user);
+        session.save(profile);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void checkOneToOne(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+        Company company = session.get(Company.class, 1);
+
+        User user = User.builder()
+                .username("Ban@1mail.ru")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Dan8888")
+                        .lastname("Web")
+                        .birthDate(new Birthday(LocalDate.of(1999, 10, 11))).build())
+                .company(company)
+                .role(Role.ADMIN)
+                .build();
+        Profile profile = Profile.builder()
+                .language("RU")
+                .street("ofmsc")
+                .build();
+        session.save(user);
+        profile.setUser(user);
+        session.save(profile);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void checkOrphalRemoval(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+
+        Company company = session.get(Company.class, 3);
+        company.getUsers().clear();
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void addNewUserAndCompany(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+
+        Company company = Company.builder()
+                .name("Google2")
+                .build();
+        User user = User.builder()
+                .username("Ban@999mail.ru")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Dan")
+                        .lastname("Web")
+                        .birthDate(new Birthday(LocalDate.of(1999, 10, 11))).build())
+                .role(Role.ADMIN)
+                .build();
+
+        company.addUser(user);
+
+        session.saveOrUpdate(company);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void checkOneToMany(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+
+        var company = session.get(Company.class, 4);
+        System.out.println(company.getUsers());
+
+        session.getTransaction().commit();
+    }
+
     @Test
     public void testHibernateApi(){
-        var user = User.builder()
+        /*var user = User.builder()
                 .username("Vlad@111mail.ru")
                 .firstname("Vlad")
                 .lastname("Admin")
@@ -63,7 +175,6 @@ class HibernateRunnerTest {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
-        }
-
+        }*/
     }
-}*/
+}
