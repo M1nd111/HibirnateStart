@@ -12,10 +12,11 @@ import java.util.List;
 @ToString(exclude = {"company", "profile", "usersChats"})
 
 @EqualsAndHashCode(of = "username")
-@Builder
+//@Builder
 @Entity
 @Table(name = "users", schema = "public")
-
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 public class User {
 
     @Id
@@ -31,9 +32,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id")
-
     private Company company;
 
 
@@ -42,7 +42,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ProfileAutoId profileAutoId;
 
-    @Builder.Default
+//    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UsersChat> usersChats = new ArrayList<>();
 

@@ -23,8 +23,7 @@ public class Company {
     @Column(unique = true, nullable = false)
     private String name;
     @Builder.Default
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-
+    @OneToMany(mappedBy = "company",  cascade = CascadeType.ALL,orphanRemoval = true)
     private List<User> users = new ArrayList<>();
     public void addUser(User user){
         users.add(user);

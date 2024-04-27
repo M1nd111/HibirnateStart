@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Slf4j
 public class HibernateRunner {
     public static void main(String[] args) {
-        Configuration configuration = new Configuration();
+        /*Configuration configuration = new Configuration();
         configuration.configure();
         configuration.addAttributeConverter(new BirthdayConverter(), true);
 //        configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
@@ -37,11 +37,10 @@ public class HibernateRunner {
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-//            session.saveOrUpdate(company);
-            session.saveOrUpdate(user);
+            System.out.println("OK");
 
             session.getTransaction().commit();
-        }
+        }*/
     }
 }
 

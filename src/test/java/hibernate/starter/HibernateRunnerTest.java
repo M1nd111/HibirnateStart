@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,7 +24,56 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateRunnerTest {
 
+    @Test
+    @Transactional
+    public void checkInheritance(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
 
+        session.beginTransaction();
+
+        Company company = session.get(Company.class, 24);
+
+
+        Programmer programmer = Programmer.builder()
+                .username("Ban1@mail.ru")
+                .company(company)
+                .language(Language.JAVA)
+                .build();
+        session.save(programmer);
+
+        Manager manager = Manager.builder()
+                .username("Ban2@mail.ru")
+                .company(company)
+                .project("test")
+                .build();
+
+        session.save(manager);
+
+        session.flush();
+        session.clear();
+
+        var programmer1 = session.get(Programmer.class, 1L);
+        var manager1 = session.get(Manager.class, 2L);
+
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void checkH2(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+
+        var company = Company.builder()
+                        .name("Yandex2").build();
+
+        session.save(company);
+
+        session.getTransaction().commit();
+    }
 
     @Test
     public void addChats(){
@@ -36,11 +86,13 @@ class HibernateRunnerTest {
 
         User user = session.get(User.class, 4L);
 
-        UsersChat usersChat = UsersChat.builder()
+        /*UsersChat usersChat = UsersChat.builder()
                 .createdAt(Instant.now())
                 .createdBy("Admin")
-                .build();
+                .build();*/
 
+
+        UsersChat usersChat = new UsersChat();
         usersChat.setChat(chat);
         usersChat.setUser(user);
 
@@ -49,7 +101,7 @@ class HibernateRunnerTest {
         session.getTransaction().commit();
     }
 
-    @Test
+    /*@Test
     public void checkOneToOneAutoId(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
@@ -160,7 +212,7 @@ class HibernateRunnerTest {
 
     @Test
     public void testHibernateApi(){
-        /*var user = User.builder()
+        var user = User.builder()
                 .username("Vlad@111mail.ru")
                 .firstname("Vlad")
                 .lastname("Admin")
@@ -203,6 +255,6 @@ class HibernateRunnerTest {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
-        }*/
-    }
+        }
+    }*/
 }

@@ -1,20 +1,18 @@
 package hibernate.starter.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Data
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "users_chat", schema = "public")
-public class UsersChat {
+public class UsersChat extends AuditableEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +25,6 @@ public class UsersChat {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    private Instant createdAt;
-    private String createdBy;
 
     public void setChat(Chat chat){
         this.chat = chat;
@@ -38,5 +34,8 @@ public class UsersChat {
         this.user = user;
         user.getUsersChats().add(this);
     }
+    @Override
+    public void setId() {
 
+    }
 }

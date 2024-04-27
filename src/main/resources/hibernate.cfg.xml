@@ -15,7 +15,10 @@
     <mapping class="hibernate.starter.entity.Company"/>
     <mapping class="hibernate.starter.entity.Profile"/>
     <mapping class="hibernate.starter.entity.ProfileAutoId"/>
-
+    <mapping class="hibernate.starter.entity.Chat"/>
+    <mapping class="hibernate.starter.entity.UsersChat"/>
+    <mapping class="hibernate.starter.entity.Programmer"/>
+    <mapping class="hibernate.starter.entity.Manager"/>
 
 
     <!-- DB schema will be updated if needed -->
