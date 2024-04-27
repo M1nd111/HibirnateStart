@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,6 +22,32 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateRunnerTest {
+
+
+
+    @Test
+    public void addChats(){
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.beginTransaction();
+
+        Chat chat = session.get(Chat.class, 1L);
+
+        User user = session.get(User.class, 4L);
+
+        UsersChat usersChat = UsersChat.builder()
+                .createdAt(Instant.now())
+                .createdBy("Admin")
+                .build();
+
+        usersChat.setChat(chat);
+        usersChat.setUser(user);
+
+        session.save(usersChat);
+
+        session.getTransaction().commit();
+    }
 
     @Test
     public void checkOneToOneAutoId(){
@@ -101,6 +128,7 @@ class HibernateRunnerTest {
         Company company = Company.builder()
                 .name("Google2")
                 .build();
+
         User user = User.builder()
                 .username("Ban@999mail.ru")
                 .personalInfo(PersonalInfo.builder()
