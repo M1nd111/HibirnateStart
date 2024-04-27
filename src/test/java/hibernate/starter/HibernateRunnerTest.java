@@ -23,44 +23,34 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateRunnerTest {
-
     @Test
-    @Transactional
-    public void checkInheritance(){
+    public void checkHQL(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
 
         session.beginTransaction();
 
-        Company company = session.get(Company.class, 24);
+        String role = "Admin";
+        String company = "Yandex";
+
+        var users = session.createNamedQuery("findUserByNameAndCompany")
+                .setParameter("role", role)
+                .setParameter("company", company)
+                .list();
+        session.createQuery("""
+                        update User u
+                        set role = 'Admin'
+                        """)
+                .executeUpdate();
 
 
-        Programmer programmer = Programmer.builder()
-                .username("Ban1@mail.ru")
-                .company(company)
-                .language(Language.JAVA)
-                .build();
-        session.save(programmer);
-
-        Manager manager = Manager.builder()
-                .username("Ban2@mail.ru")
-                .company(company)
-                .project("test")
-                .build();
-
-        session.save(manager);
-
-        session.flush();
-        session.clear();
-
-        var programmer1 = session.get(Programmer.class, 1L);
-        var manager1 = session.get(Manager.class, 2L);
-
+        System.out.println(users);
 
         session.getTransaction().commit();
     }
 
-    @Test
+
+    /*@Test
     public void checkH2(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
@@ -73,9 +63,9 @@ class HibernateRunnerTest {
         session.save(company);
 
         session.getTransaction().commit();
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void addChats(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
@@ -86,10 +76,10 @@ class HibernateRunnerTest {
 
         User user = session.get(User.class, 4L);
 
-        /*UsersChat usersChat = UsersChat.builder()
+        *//*UsersChat usersChat = UsersChat.builder()
                 .createdAt(Instant.now())
                 .createdBy("Admin")
-                .build();*/
+                .build();*//*
 
 
         UsersChat usersChat = new UsersChat();
@@ -99,7 +89,7 @@ class HibernateRunnerTest {
         session.save(usersChat);
 
         session.getTransaction().commit();
-    }
+    }*/
 
     /*@Test
     public void checkOneToOneAutoId(){
@@ -127,7 +117,7 @@ class HibernateRunnerTest {
         session.save(profile);
 
         session.getTransaction().commit();
-    }
+    }*/
 
     @Test
     public void checkOneToOne(){
@@ -138,9 +128,9 @@ class HibernateRunnerTest {
         Company company = session.get(Company.class, 1);
 
         User user = User.builder()
-                .username("Ban@1mail.ru")
+                .username("Vlad@mail.ru")
                 .personalInfo(PersonalInfo.builder()
-                        .firstname("Dan8888")
+                        .firstname("first")
                         .lastname("Web")
                         .birthDate(new Birthday(LocalDate.of(1999, 10, 11))).build())
                 .company(company)
@@ -148,7 +138,7 @@ class HibernateRunnerTest {
                 .build();
         Profile profile = Profile.builder()
                 .language("RU")
-                .street("ofmsc")
+                .street("ofMsc")
                 .build();
         session.save(user);
         profile.setUser(user);
@@ -157,7 +147,7 @@ class HibernateRunnerTest {
         session.getTransaction().commit();
     }
 
-    @Test
+    /*@Test
     public void checkOrphalRemoval(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
@@ -168,9 +158,9 @@ class HibernateRunnerTest {
         company.getUsers().clear();
 
         session.getTransaction().commit();
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void addNewUserAndCompany(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
@@ -195,9 +185,9 @@ class HibernateRunnerTest {
         session.saveOrUpdate(company);
 
         session.getTransaction().commit();
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void checkOneToMany(){
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
@@ -208,9 +198,9 @@ class HibernateRunnerTest {
         System.out.println(company.getUsers());
 
         session.getTransaction().commit();
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testHibernateApi(){
         var user = User.builder()
                 .username("Vlad@111mail.ru")

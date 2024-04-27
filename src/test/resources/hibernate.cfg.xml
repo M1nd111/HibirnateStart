@@ -11,15 +11,16 @@
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+<!--
     <property name="hibernate.hbm2ddl.auto">create</property>
+-->
     <mapping class="hibernate.starter.entity.User"/>
     <mapping class="hibernate.starter.entity.Company"/>
     <mapping class="hibernate.starter.entity.Profile"/>
     <mapping class="hibernate.starter.entity.ProfileAutoId"/>
     <mapping class="hibernate.starter.entity.Chat"/>
     <mapping class="hibernate.starter.entity.UsersChat"/>
-    <mapping class="hibernate.starter.entity.Programmer"/>
-    <mapping class="hibernate.starter.entity.Manager"/>
+
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

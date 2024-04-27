@@ -27,6 +27,6 @@ public class ProfileAutoId {
 
     public  void setUser(User user){
         this.user = user;
-        user.setProfileAutoId(this);
+//        user.setProfileAutoId(this);
     }
 }
